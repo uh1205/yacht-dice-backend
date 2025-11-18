@@ -5,13 +5,10 @@ import yacht.domain.dice.strategy.DiceRollStrategy;
 
 public class Dice {
 
-    public static final int MIN_VALUE = 1;
-    public static final int MAX_VALUE = 6;
-
     private final DiceRollStrategy rollStrategy;
 
     @Getter
-    private Integer value;
+    private DiceValue value;
     private boolean locked = false;
 
     public Dice(DiceRollStrategy rollStrategy) {
@@ -19,21 +16,11 @@ public class Dice {
     }
 
     public void roll() {
-        if (!this.locked) {
-            updateValue();
+        if (this.locked) {
+            return;
         }
-    }
-
-    private void updateValue() {
-        int newValue = rollStrategy.roll(MIN_VALUE, MAX_VALUE);
-        validateValue(newValue);
-        this.value = newValue;
-    }
-
-    private void validateValue(int value) {
-        if (value < MIN_VALUE || value > MAX_VALUE) {
-            throw new IllegalStateException("주사위가 가질 수 있는 값의 범위를 벗어났습니다.");
-        }
+        int rolled = rollStrategy.roll(DiceValue.MIN_VALUE, DiceValue.MAX_VALUE);
+        this.value = new DiceValue(rolled);
     }
 
     public void lock() {
@@ -49,4 +36,20 @@ public class Dice {
         this.locked = false;
     }
 
+    public record DiceValue(int value) {
+
+        public static final int MIN_VALUE = 1;
+        public static final int MAX_VALUE = 6;
+
+        public DiceValue {
+            validateValue(value);
+        }
+
+        private void validateValue(int value) {
+            if (value < MIN_VALUE || value > MAX_VALUE) {
+                throw new IllegalStateException("주사위가 가질 수 있는 값의 범위를 벗어났습니다.");
+            }
+        }
+
+    }
 }
