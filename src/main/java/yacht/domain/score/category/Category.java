@@ -7,4 +7,6 @@ public interface Category {
 
     Score calculateScore(DiceSet diceSet);
 
+    boolean isUpperCategory();
+
 }

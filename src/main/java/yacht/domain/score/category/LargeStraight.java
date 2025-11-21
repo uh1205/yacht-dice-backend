@@ -16,4 +16,9 @@ public class LargeStraight implements Category {
         return Score.ofZero();
     }
 
+    @Override
+    public boolean isUpperCategory() {
+        return false;
+    }
+
 }

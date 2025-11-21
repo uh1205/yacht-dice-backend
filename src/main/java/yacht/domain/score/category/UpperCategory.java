@@ -1,7 +1,7 @@
 package yacht.domain.score.category;
 
-import yacht.domain.dice.Dice.DiceValue;
 import yacht.domain.dice.DiceSet;
+import yacht.domain.dice.DiceValue;
 import yacht.domain.score.Score;
 
 public class UpperCategory implements Category {
@@ -15,7 +15,12 @@ public class UpperCategory implements Category {
     @Override
     public Score calculateScore(DiceSet diceSet) {
         int count = diceSet.countOf(diceValue);
-        return Score.of(count * diceValue.value());
+        return Score.of(count * diceValue.getValue());
+    }
+
+    @Override
+    public boolean isUpperCategory() {
+        return true;
     }
 
 }

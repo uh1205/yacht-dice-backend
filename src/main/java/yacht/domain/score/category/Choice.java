@@ -10,4 +10,9 @@ public class Choice implements Category {
         return Score.of(diceSet.sum());
     }
 
+    @Override
+    public boolean isUpperCategory() {
+        return false;
+    }
+
 }

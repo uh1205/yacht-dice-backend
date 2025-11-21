@@ -1,7 +1,10 @@
 package yacht.domain.score;
 
+import lombok.Getter;
+
 public class Score {
 
+    @Getter
     private final int value;
 
     private Score(int value) {
@@ -19,8 +22,8 @@ public class Score {
         return new Score(0);
     }
 
-    public int value() {
-        return this.value;
+    public boolean isGreaterEqual(int value) {
+        return this.value >= value;
     }
 
 }

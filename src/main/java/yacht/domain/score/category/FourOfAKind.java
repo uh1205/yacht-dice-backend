@@ -13,4 +13,9 @@ public class FourOfAKind implements Category {
         return Score.ofZero();
     }
 
+    @Override
+    public boolean isUpperCategory() {
+        return false;
+    }
+
 }
