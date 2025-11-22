@@ -10,10 +10,15 @@ public class Player {
 
     @Getter
     private final String playerId;
+
+    @Getter
+    private final String nickname;
+
     private final ScoreBoard scoreBoard = new ScoreBoard();
 
-    public Player(String playerId) {
+    public Player(String playerId, String nickname) {
         this.playerId = playerId;
+        this.nickname = nickname;
     }
 
     /**
