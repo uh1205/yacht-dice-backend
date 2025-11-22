@@ -7,6 +7,7 @@ import yacht.domain.game.Player;
 import yacht.domain.score.category.ScoreCategory;
 import yacht.dto.GameMessageType;
 import yacht.dto.game.GameInitStateResponse;
+import yacht.dto.game.PlayerInfo;
 
 @Component
 public class GameInitStateAssembler {
@@ -18,16 +19,20 @@ public class GameInitStateAssembler {
                 .totalRounds(room.getTotalRounds())
                 .bonusScore(room.getBonusScore())
                 .bonusThreshold(room.getBonusThreshold())
-                .currentPlayerId(room.getCurrentPlayer().getPlayerId())
-                .playerIds(toPlayerIds(room.getPlayers()))
+                .currentPlayer(toPlayerInfo(room.getCurrentPlayer()))
                 .upperCategories(toCategoryNames(room.getUpperCategories()))
                 .lowerCategories(toCategoryNames(room.getLowerCategories()))
+                .players(toPlayerInfos(room.getPlayers()))
                 .build();
     }
 
-    private List<String> toPlayerIds(List<Player> players) {
+    private PlayerInfo toPlayerInfo(Player player) {
+        return new PlayerInfo(player.getPlayerId(), player.getNickname());
+    }
+
+    private List<PlayerInfo> toPlayerInfos(List<Player> players) {
         return players.stream()
-                .map(Player::getPlayerId)
+                .map(this::toPlayerInfo)
                 .toList();
     }
 

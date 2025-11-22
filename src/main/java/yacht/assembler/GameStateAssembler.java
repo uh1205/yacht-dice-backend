@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import yacht.domain.dice.DiceValue;
 import yacht.domain.game.GameRoom;
+import yacht.domain.game.Player;
 import yacht.domain.score.Score;
 import yacht.domain.score.category.ScoreCategory;
 import yacht.dto.GameMessageType;
 import yacht.dto.game.GameStateResponse;
+import yacht.dto.game.PlayerInfo;
 import yacht.dto.game.PlayerStateResponse;
 
 @Component
@@ -22,12 +24,16 @@ public class GameStateAssembler {
                 .isRolled(room.isRolled())
                 .currentRound(room.getCurrentRound())
                 .remainingRollCount(room.getRemainingRollCount())
-                .currentPlayerId(room.getCurrentPlayer().getPlayerId())
+                .currentPlayer(toPlayerInfo(room.getCurrentPlayer()))
                 .diceValues(toDiceValues(room.getDiceValues()))
                 .diceLocks(room.getDiceLocks())
                 .possibleScores(toPossibleScores(room.computePossibleScores()))
                 .playerStates(toPlayerStates(room))
                 .build();
+    }
+
+    private PlayerInfo toPlayerInfo(Player player) {
+        return new PlayerInfo(player.getPlayerId(), player.getNickname());
     }
 
     private List<Integer> toDiceValues(List<DiceValue> diceValues) {

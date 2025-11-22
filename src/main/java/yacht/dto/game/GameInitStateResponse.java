@@ -10,9 +10,9 @@ public record GameInitStateResponse(
         int totalRounds,
         int bonusScore,
         int bonusThreshold,
-        String currentPlayerId,
-        List<String> playerIds,
+        PlayerInfo currentPlayer,
         List<String> upperCategories,
-        List<String> lowerCategories
+        List<String> lowerCategories,
+        List<PlayerInfo> players
 ) {
 }

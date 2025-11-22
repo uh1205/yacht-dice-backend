@@ -11,7 +11,7 @@ public record GameStateResponse(
         boolean isRolled,
         int currentRound,
         int remainingRollCount,
-        String currentPlayerId,
+        PlayerInfo currentPlayer,
         List<Integer> diceValues,
         List<Boolean> diceLocks,
         Map<String, Integer> possibleScores,
