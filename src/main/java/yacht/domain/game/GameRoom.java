@@ -113,15 +113,6 @@ public class GameRoom {
     }
 
     /**
-     * 주사위를 굴릴 수 있는 최대 횟수를 반환합니다.
-     *
-     * @return 최대 주사위 굴림 횟수
-     */
-    public int getMaxRollCount() {
-        return MAX_ROLL_COUNT;
-    }
-
-    /**
      * 전체 라운드 수를 반환합니다. (전체 족보 개수와 동일합니다.)
      *
      * @return 전체 라운드 수

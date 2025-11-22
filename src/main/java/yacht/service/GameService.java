@@ -2,16 +2,14 @@ package yacht.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import yacht.assembler.GameInitStateAssembler;
 import yacht.assembler.GameStateAssembler;
 import yacht.domain.game.GameRoom;
 import yacht.domain.game.Player;
 import yacht.domain.score.category.ScoreCategory;
 import yacht.dto.game.DiceActionRequest;
-import yacht.dto.game.GameInitStateResponse;
 import yacht.dto.game.GameStateResponse;
 import yacht.dto.game.PlayerActionRequest;
-import yacht.dto.game.ScoreSelectionRequest;
+import yacht.dto.game.ScoreRecordRequest;
 import yacht.repository.PlayerRepository;
 import yacht.repository.RoomRepository;
 
@@ -21,12 +19,11 @@ public class GameService {
 
     private final RoomRepository roomRepository;
     private final PlayerRepository playerRepository;
-    private final GameInitStateAssembler initStateAssembler;
     private final GameStateAssembler stateAssembler;
 
-    public GameInitStateResponse initGameRoom(String roomId) {
+    public GameStateResponse getCurrentState(String roomId) {
         GameRoom room = findRoom(roomId);
-        return initStateAssembler.toResponse(room);
+        return stateAssembler.toResponse(room);
     }
 
     public GameStateResponse lockDice(String roomId, DiceActionRequest request) {
@@ -53,7 +50,7 @@ public class GameService {
         return stateAssembler.toResponse(room);
     }
 
-    public GameStateResponse selectScore(String roomId, ScoreSelectionRequest request) {
+    public GameStateResponse recordScore(String roomId, ScoreRecordRequest request) {
         GameRoom room = findRoom(roomId);
         Player player = findPlayer(request.getPlayerId());
         room.assertPlayerTurn(player);

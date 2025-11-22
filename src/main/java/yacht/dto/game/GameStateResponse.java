@@ -7,11 +7,17 @@ import lombok.Builder;
 @Builder
 public record GameStateResponse(
         String type,
+        int totalRounds,
+        int bonusScore,
+        int bonusThreshold,
+        List<String> upperCategories,
+        List<String> lowerCategories,
+        List<PlayerInfo> players,
+        PlayerInfo currentPlayer,
         boolean isGameOver,
         boolean isRolled,
         int currentRound,
         int remainingRollCount,
-        PlayerInfo currentPlayer,
         List<Integer> diceValues,
         List<Boolean> diceLocks,
         Map<String, Integer> possibleScores,

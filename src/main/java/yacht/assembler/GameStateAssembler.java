@@ -20,16 +20,34 @@ public class GameStateAssembler {
     public GameStateResponse toResponse(GameRoom room) {
         return GameStateResponse.builder()
                 .type(GameMessageType.GAME_STATE.name())
+                .totalRounds(room.getTotalRounds())
+                .bonusScore(room.getBonusScore())
+                .bonusThreshold(room.getBonusThreshold())
+                .upperCategories(toCategoryNames(room.getUpperCategories()))
+                .lowerCategories(toCategoryNames(room.getLowerCategories()))
+                .players(toPlayerInfos(room.getPlayers()))
+                .currentPlayer(toPlayerInfo(room.getCurrentPlayer()))
                 .isGameOver(room.isGameOver())
                 .isRolled(room.isRolled())
                 .currentRound(room.getCurrentRound())
                 .remainingRollCount(room.getRemainingRollCount())
-                .currentPlayer(toPlayerInfo(room.getCurrentPlayer()))
                 .diceValues(toDiceValues(room.getDiceValues()))
                 .diceLocks(room.getDiceLocks())
                 .possibleScores(toPossibleScores(room.computePossibleScores()))
                 .playerStates(toPlayerStates(room))
                 .build();
+    }
+
+    private List<String> toCategoryNames(List<ScoreCategory> categories) {
+        return categories.stream()
+                .map(ScoreCategory::getCategoryName)
+                .toList();
+    }
+
+    private List<PlayerInfo> toPlayerInfos(List<Player> players) {
+        return players.stream()
+                .map(this::toPlayerInfo)
+                .toList();
     }
 
     private PlayerInfo toPlayerInfo(Player player) {

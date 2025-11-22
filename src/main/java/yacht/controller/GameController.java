@@ -6,10 +6,9 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import yacht.dto.game.DiceActionRequest;
-import yacht.dto.game.GameInitStateResponse;
 import yacht.dto.game.GameStateResponse;
 import yacht.dto.game.PlayerActionRequest;
-import yacht.dto.game.ScoreSelectionRequest;
+import yacht.dto.game.ScoreRecordRequest;
 import yacht.service.GameService;
 
 @Controller
@@ -22,6 +21,9 @@ public class GameController {
     @MessageMapping("/game/{roomId}/init")
     public void initGameRoom(@DestinationVariable String roomId) {
         GameInitStateResponse response = gameService.initGameRoom(roomId);
+    @MessageMapping("/game/{roomId}/state")
+    public void getGameState(@DestinationVariable String roomId) {
+        GameStateResponse response = gameService.getCurrentState(roomId);
         messagingTemplate.convertAndSend("/topic/room/" + roomId, response);
     }
 
@@ -43,9 +45,9 @@ public class GameController {
         broadcast(roomId, response);
     }
 
-    @MessageMapping("/game/{roomId}/select-score")
-    public void selectScore(@DestinationVariable String roomId, ScoreSelectionRequest request) {
-        GameStateResponse response = gameService.selectScore(roomId, request);
+    @MessageMapping("/game/{roomId}/record-score")
+    public void recordScore(@DestinationVariable String roomId, ScoreRecordRequest request) {
+        GameStateResponse response = gameService.recordScore(roomId, request);
         broadcast(roomId, response);
     }
 
