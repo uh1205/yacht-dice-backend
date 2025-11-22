@@ -1,0 +1,59 @@
+package yacht.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
+import yacht.dto.game.DiceActionRequest;
+import yacht.dto.game.GameInitStateResponse;
+import yacht.dto.game.GameStateResponse;
+import yacht.dto.game.PlayerActionRequest;
+import yacht.dto.game.ScoreSelectionRequest;
+import yacht.service.GameService;
+
+@Controller
+@RequiredArgsConstructor
+public class GameController {
+
+    private final GameService gameService;
+    private final SimpMessagingTemplate messagingTemplate;
+
+    @MessageMapping("/game/{roomId}/init")
+    public void initGameRoom(@DestinationVariable String roomId) {
+        GameInitStateResponse response = gameService.initGameRoom(roomId);
+        messagingTemplate.convertAndSend("/topic/room/" + roomId, response);
+    }
+
+    @MessageMapping("/game/{roomId}/lock-dice")
+    public void lockDice(@DestinationVariable String roomId, DiceActionRequest request) {
+        GameStateResponse response = gameService.lockDice(roomId, request);
+        broadcast(roomId, response);
+    }
+
+    @MessageMapping("/game/{roomId}/unlock-dice")
+    public void unlockDice(@DestinationVariable String roomId, DiceActionRequest request) {
+        GameStateResponse response = gameService.unlockDice(roomId, request);
+        broadcast(roomId, response);
+    }
+
+    @MessageMapping("/game/{roomId}/roll-dice")
+    public void rollDice(@DestinationVariable String roomId, PlayerActionRequest request) {
+        GameStateResponse response = gameService.rollDice(roomId, request);
+        broadcast(roomId, response);
+    }
+
+    @MessageMapping("/game/{roomId}/select-score")
+    public void selectScore(@DestinationVariable String roomId, ScoreSelectionRequest request) {
+        GameStateResponse response = gameService.selectScore(roomId, request);
+        broadcast(roomId, response);
+    }
+
+    private void broadcast(String roomId, GameStateResponse gameStateResponse) {
+        messagingTemplate.convertAndSend(
+                "/topic/room/" + roomId,
+                gameStateResponse
+        );
+    }
+
+}
