@@ -76,4 +76,8 @@ public class Player {
         return scoreBoard.getScores();
     }
 
+    public void clearScoreBoard() {
+        scoreBoard.clear();
+    }
+
 }

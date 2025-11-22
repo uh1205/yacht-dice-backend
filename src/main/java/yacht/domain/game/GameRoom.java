@@ -32,11 +32,12 @@ public class GameRoom {
     }
 
     /**
-     * 플레이어를 추가합니다.
+     * 플레이어를 추가합니다. (플레이어의 기존 점수표는 초기화됩니다.)
      *
      * @param player 추가할 플레이어
      */
     public void addPlayer(Player player) {
+        player.clearScoreBoard();
         participants.add(player);
     }
 

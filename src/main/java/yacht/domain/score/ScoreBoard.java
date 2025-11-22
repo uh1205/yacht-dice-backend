@@ -103,4 +103,8 @@ public class ScoreBoard {
                 .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
+    public void clear() {
+        scores.replaceAll((category, score) -> null);
+    }
+
 }
