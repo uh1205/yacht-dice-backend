@@ -113,6 +113,16 @@ public class GameRoom {
     }
 
     /**
+     * 무승부 여부를 반환합니다.
+     *
+     * @return 무승부 여부
+     */
+    public boolean isDraw() {
+        assertGameOver();
+        return participants.isDraw();
+    }
+
+    /**
      * 전체 라운드 수를 반환합니다. (전체 족보 개수와 동일합니다.)
      *
      * @return 전체 라운드 수
@@ -158,6 +168,47 @@ public class GameRoom {
     }
 
     /**
+     * 우승한 플레이어를 반환합니다.
+     *
+     * @return 우승한 플레이어
+     */
+    public Player getWinner() {
+        assertGameOver();
+        assertNoDraw();
+        return participants.getLeadingPlayer();
+    }
+
+    private void assertGameOver() {
+        if (!isGameOver()) {
+            throw new IllegalStateException("아직 게임이 종료되지 않았습니다.");
+        }
+    }
+
+    private void assertNoDraw() {
+        if (isDraw()) {
+            throw new IllegalStateException("무승부로 끝난 게임입니다.");
+        }
+    }
+
+    /**
+     * 전체 주사위의 고정 여부를 반환합니다.
+     *
+     * @return 전체 주사위 고정 여부
+     */
+    public List<Boolean> getDiceLocks() {
+        return diceSet.getDiceLocks();
+    }
+
+    /**
+     * 전체 주사위의 눈을 반환합니다.
+     *
+     * @return 전체 주사위 눈
+     */
+    public List<DiceValue> getDiceValues() {
+        return diceSet.getDiceValues();
+    }
+
+    /**
      * 전체 플레이어를 반환합니다.
      *
      * @return 전체 플레이어
@@ -186,24 +237,6 @@ public class GameRoom {
         return Arrays.stream(ScoreCategory.values())
                 .filter(ScoreCategory::isLowerCategory)
                 .toList();
-    }
-
-    /**
-     * 전체 주사위의 눈을 반환합니다.
-     *
-     * @return 전체 주사위 눈
-     */
-    public List<DiceValue> getDiceValues() {
-        return diceSet.getDiceValues();
-    }
-
-    /**
-     * 전체 주사위의 고정 여부를 반환합니다.
-     *
-     * @return 전체 주사위 고정 여부
-     */
-    public List<Boolean> getDiceLocks() {
-        return diceSet.getDiceLocks();
     }
 
     /**

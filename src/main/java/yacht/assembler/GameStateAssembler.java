@@ -35,7 +35,23 @@ public class GameStateAssembler {
                 .diceLocks(room.getDiceLocks())
                 .possibleScores(toPossibleScores(room.computePossibleScores()))
                 .playerStates(toPlayerStates(room))
+                .isDraw(isRoomDraw(room))
+                .winner(getWinner(room))
                 .build();
+    }
+
+    private boolean isRoomDraw(GameRoom room) {
+        if (room.isGameOver()) {
+            return room.isDraw();
+        }
+        return false;
+    }
+
+    private PlayerInfo getWinner(GameRoom room) {
+        if (!room.isGameOver() || isRoomDraw(room)) {
+            return null;
+        }
+        return toPlayerInfo(room.getWinner());
     }
 
     private List<String> toCategoryNames(List<ScoreCategory> categories) {
@@ -64,7 +80,7 @@ public class GameStateAssembler {
         return possibleScores.entrySet().stream()
                 .collect(Collectors.toMap(
                         e -> e.getKey().getCategoryName(),
-                        e -> e.getValue().getValue()
+                        e -> e.getValue().value()
                 ));
     }
 
@@ -75,8 +91,8 @@ public class GameStateAssembler {
                                 .playerId(player.getPlayerId())
                                 .isUpperFull(player.isUpperFull())
                                 .bonusAwarded(player.isBonusAwarded())
-                                .subtotal(player.getSubtotal().getValue())
-                                .total(player.getTotal().getValue())
+                                .subtotal(player.getSubtotal().value())
+                                .total(player.getTotal().value())
                                 .scores(toScores(player.getScores()))
                                 .build()
                 )
@@ -87,7 +103,7 @@ public class GameStateAssembler {
         return scores.entrySet().stream()
                 .collect(Collectors.toMap(
                         e -> e.getKey().getCategoryName(),
-                        e -> e.getValue().getValue()
+                        e -> e.getValue().value()
                 ));
     }
 
