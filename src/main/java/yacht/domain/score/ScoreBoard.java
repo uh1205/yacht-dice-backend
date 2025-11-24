@@ -42,7 +42,7 @@ public class ScoreBoard {
      * @return 보너스 획득 여부
      */
     public boolean isBonusAwarded() {
-        return subtotal().isGreaterEqual(BONUS_THRESHOLD);
+        return subtotal().value() >= BONUS_THRESHOLD;
     }
 
     /**
@@ -57,7 +57,7 @@ public class ScoreBoard {
     private int sumUpperCategory() {
         return scores.entrySet().stream()
                 .filter(e -> e.getKey().isUpperCategory() && e.getValue() != null)
-                .mapToInt(e -> e.getValue().getValue())
+                .mapToInt(e -> e.getValue().value())
                 .sum();
     }
 
@@ -77,7 +77,7 @@ public class ScoreBoard {
     private int calculateBaseScore() {
         return scores.values().stream()
                 .filter(Objects::nonNull)
-                .mapToInt(Score::getValue)
+                .mapToInt(Score::value)
                 .sum();
     }
 

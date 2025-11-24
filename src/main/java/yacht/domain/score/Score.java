@@ -1,29 +1,29 @@
 package yacht.domain.score;
 
-import lombok.Getter;
+public record Score(int value) implements Comparable<Score> {
 
-public class Score {
+    private static final Score ZERO = new Score(0);
 
-    @Getter
-    private final int value;
-
-    private Score(int value) {
+    public Score {
         if (value < 0) {
-            throw new IllegalStateException("점수는 0 미만일 수 없습니다.");
+            throw new IllegalArgumentException("점수는 0 미만일 수 없습니다: " + value);
         }
-        this.value = value;
     }
 
     public static Score of(int value) {
+        if (value == 0) {
+            return ZERO;
+        }
         return new Score(value);
     }
 
     public static Score ofZero() {
-        return new Score(0);
+        return ZERO;
     }
 
-    public boolean isGreaterEqual(int value) {
-        return this.value >= value;
+    @Override
+    public int compareTo(Score other) {
+        return Integer.compare(this.value, other.value);
     }
 
 }
