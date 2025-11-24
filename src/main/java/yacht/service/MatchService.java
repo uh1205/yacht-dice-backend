@@ -1,5 +1,6 @@
 package yacht.service;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -21,6 +22,11 @@ public class MatchService {
     private final PlayerRepository playerRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
+    /**
+     * 매칭 대기열에 플레이어를 추가하고, 2명 이상이 모이면 매칭합니다.
+     *
+     * @param playerId 추가할 플레이어 ID
+     */
     public void joinMatch(String playerId) {
         Player player = findPlayer(playerId);
         addPlayerInQueue(player);
@@ -35,20 +41,21 @@ public class MatchService {
     }
 
     private void matchIfPossible() {
-        if (waitingQueue.size() >= 2) {
-            createNewGameRoom();
+        if (waitingQueue.size() < 2) {
+            return;
         }
-    }
-
-    private void createNewGameRoom() {
         Player player1 = waitingQueue.poll();
         Player player2 = waitingQueue.poll();
+        createRoom(player1, player2);
+    }
 
+    private void createRoom(Player... players) {
         GameRoom room = roomRepository.create();
-        room.addPlayer(player1);
-        room.addPlayer(player2);
+        Arrays.stream(players).forEach(room::addPlayer);
+        broadcastMatchSuccess(room);
+    }
 
-        // 각 플레이어에게 매칭 성공 알림
+    private void broadcastMatchSuccess(GameRoom room) {
         room.getPlayers().stream()
                 .map(Player::getPlayerId)
                 .forEach(playerId -> messagingTemplate.convertAndSend(
@@ -60,6 +67,11 @@ public class MatchService {
                 ));
     }
 
+    /**
+     * 매칭 대기를 취소합니다.
+     *
+     * @param playerId 매칭 취소할 플레이어 ID
+     */
     public void cancelMatch(String playerId) {
         Player player = findPlayer(playerId);
         waitingQueue.remove(player);
