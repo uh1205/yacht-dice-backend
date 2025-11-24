@@ -26,7 +26,7 @@ public class DiceSet {
      */
     public void lock(int diceIndex) {
         validateDiceIndex(diceIndex);
-        getDice(diceIndex).lock();
+        dices.get(diceIndex).lock();
     }
 
     /**
@@ -36,7 +36,7 @@ public class DiceSet {
      */
     public void unlock(int diceIndex) {
         validateDiceIndex(diceIndex);
-        getDice(diceIndex).unlock();
+        dices.get(diceIndex).unlock();
     }
 
     private void validateDiceIndex(int index) {
@@ -45,22 +45,15 @@ public class DiceSet {
         }
     }
 
-    private Dice getDice(int diceIndex) {
-        return dices.get(diceIndex);
-    }
-
     /**
      * 주사위를 굴립니다. (고정된 주사위들만 굴려집니다.)
      */
     public void roll() {
         dices.forEach(Dice::roll);
-        countAll();
+        countDiceValues();
     }
 
-    /**
-     * 모든 주사위 눈의 개수를 셉니다.
-     */
-    private void countAll() {
+    private void countDiceValues() {
         diceCounts.clear();
         dices.stream()
                 .map(Dice::getValue)
@@ -68,25 +61,10 @@ public class DiceSet {
     }
 
     /**
-     * 특정 주사위 눈의 개수를 반환합니다.
-     *
-     * @param value 주사위 눈
-     * @return 주사위 눈의 개수
+     * 모든 주사위의 고정 여부를 초기화합니다.
      */
-    public int countOf(DiceValue value) {
-        return diceCounts.getOrDefault(value, 0);
-    }
-
-    /**
-     * 모든 주사위의 눈을 더합니다.
-     *
-     * @return 모든 주사위 눈의 총합
-     */
-    public int sum() {
-        return dices.stream()
-                .map(Dice::getValue)
-                .mapToInt(DiceValue::getValue)
-                .sum();
+    public void reset() {
+        dices.forEach(Dice::reset);
     }
 
     /**
@@ -140,14 +118,25 @@ public class DiceSet {
     }
 
     /**
-     * 모든 주사위의 눈을 반환합니다.
+     * 특정 주사위 눈의 개수를 반환합니다.
      *
-     * @return 모든 주사위 눈
+     * @param value 주사위 눈
+     * @return 주사위 눈의 개수
      */
-    public List<DiceValue> getDiceValues() {
+    public int countOf(DiceValue value) {
+        return diceCounts.getOrDefault(value, 0);
+    }
+
+    /**
+     * 모든 주사위의 눈을 더한 값을 반환합니다.
+     *
+     * @return 모든 주사위 눈의 총합
+     */
+    public int sum() {
         return dices.stream()
                 .map(Dice::getValue)
-                .toList();
+                .mapToInt(DiceValue::getValue)
+                .sum();
     }
 
     /**
@@ -162,10 +151,14 @@ public class DiceSet {
     }
 
     /**
-     * 모든 주사위의 고정 여부를 초기화합니다.
+     * 모든 주사위의 눈을 반환합니다.
+     *
+     * @return 모든 주사위 눈
      */
-    public void reset() {
-        dices.forEach(Dice::reset);
+    public List<DiceValue> getDiceValues() {
+        return dices.stream()
+                .map(Dice::getValue)
+                .toList();
     }
 
 }
