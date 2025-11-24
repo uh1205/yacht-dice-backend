@@ -21,6 +21,8 @@ public record GameStateResponse(
         List<Integer> diceValues,
         List<Boolean> diceLocks,
         Map<String, Integer> possibleScores,
-        List<PlayerStateResponse> playerStates
+        List<PlayerStateResponse> playerStates,
+        boolean isDraw,
+        PlayerInfo winner
 ) {
 }
